@@ -57,14 +57,14 @@ class KotlinAlternativeSourceNotificationProvider(private val myProject: Project
         }
 
         val position = session.currentPosition
-        if (position == null || file != position.file) {
+        if (file != position?.file) {
             FILE_PROCESSED_KEY.set(file, null)
             return null
         }
 
         if (DumbService.getInstance(myProject).isDumb) return null
 
-        val ktFile = (PsiManager.getInstance(myProject).findFile(file) ?: return null) as? KtFile ?: return null
+        val ktFile = PsiManager.getInstance(myProject).findFile(file) as? KtFile ?: return null
 
         val packageFqName = ktFile.packageFqName
         val fileName = ktFile.name

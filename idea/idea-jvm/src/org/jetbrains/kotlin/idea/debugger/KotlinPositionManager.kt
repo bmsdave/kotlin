@@ -88,7 +88,10 @@ class KotlinPositionManager(private val myDebugProcess: DebugProcess) : MultiReq
 
         if (!DebuggerUtils.isKotlinSourceFile(fileName)) throw NoDataException.INSTANCE
 
-        var psiFile = getPsiFileByLocation(location)
+        val psiFile = getPsiFileByLocation(location)?.let {
+            replaceWithAlternativeSource(it, location)
+        }
+
         if (psiFile == null) {
             val isKotlinStrataAvailable = location.declaringType().containsKotlinStrata()
             if (isKotlinStrataAvailable) {
@@ -111,8 +114,6 @@ class KotlinPositionManager(private val myDebugProcess: DebugProcess) : MultiReq
         }
 
         if (psiFile !is KtFile) throw NoDataException.INSTANCE
-
-        psiFile = replaceWithCustomAlternative(psiFile, location)
 
         val sourceLineNumber = location.safeSourceLineNumber
         if (sourceLineNumber < 0) {
@@ -151,20 +152,15 @@ class KotlinPositionManager(private val myDebugProcess: DebugProcess) : MultiReq
 
     class KotlinReentrantSourcePosition(delegate: SourcePosition) : DelegateSourcePosition(delegate)
 
-    private fun replaceWithCustomAlternative(ktFile: KtFile, location: Location): KtFile {
-        val qName = location.declaringType().name()
-        val alternativeFileUrl = DebuggerUtilsEx.getAlternativeSourceUrl(qName, myDebugProcess.project)
-        if (alternativeFileUrl != null) {
-            val alternativeKtFile = VirtualFileManager.getInstance().findFileByUrl(alternativeFileUrl)
-            if (alternativeKtFile != null) {
-                val altPsiFile = ktFile.manager.findFile(alternativeKtFile)
-                if (altPsiFile is KtFile) {
-                    return altPsiFile
-                }
-            }
+    private fun replaceWithAlternativeSource(psiFile: PsiFile, location: Location): PsiFile {
+        fun findAlternativeSource(): PsiFile? {
+            val qName = location.declaringType().name()
+            val alternativeFileUrl = DebuggerUtilsEx.getAlternativeSourceUrl(qName, myDebugProcess.project) ?: return null
+            val alternativePsiFile = VirtualFileManager.getInstance().findFileByUrl(alternativeFileUrl) ?: return null
+            return psiFile.manager.findFile(alternativePsiFile)
         }
 
-        return ktFile
+        return findAlternativeSource() ?: psiFile
     }
 
     // Returns a property or a constructor if debugger stops at class declaration
