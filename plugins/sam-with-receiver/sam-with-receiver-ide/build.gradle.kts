@@ -12,6 +12,7 @@ dependencies {
     compile(project(":idea:idea-core"))
     compile(project(":idea:idea-android"))
     compile(project(":idea"))
+    compile(project(":idea:idea-jvm"))
 }
 
 sourceSets {

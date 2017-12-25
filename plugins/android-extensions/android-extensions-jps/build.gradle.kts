@@ -21,6 +21,7 @@ dependencies {
     testCompile(projectTests(":kotlin-build-common"))
     testCompileOnly(intellijDep()) { includeJars("openapi", "jps-builders") }
     testCompileOnly(intellijDep("jps-build-test")) { includeJars("jps-build-test") }
+    testCompileOnly(intellijDep()) { includeJars("jps-model") }
 
     testRuntime(intellijPluginDep("android"))
     testRuntime(intellijDep("jps-build-test"))
@@ -38,6 +39,7 @@ projectTest {
     workingDir = rootDir
     doFirst {
         systemProperty("android.sdk", androidSdk.singleFile.canonicalPath)
+        systemProperty("idea.home.path", intellijRootDir().canonicalPath)
     }
 }
 

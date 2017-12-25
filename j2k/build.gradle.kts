@@ -55,6 +55,9 @@ sourceSets {
 projectTest {
     dependsOnTaskIfExistsRec("dist", project = rootProject)
     workingDir = rootDir
+    doFirst {
+        systemProperty("idea.home.path", intellijRootDir().canonicalPath)
+    }
 }
 
 testsJar()

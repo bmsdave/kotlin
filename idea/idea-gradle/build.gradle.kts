@@ -65,6 +65,7 @@ projectTest {
     dependsOn(androidSdk)
     doFirst {
         systemProperty("android.sdk", androidSdk.singleFile.canonicalPath)
+        systemProperty("idea.home.path", intellijRootDir().canonicalPath)
     }
 }
 

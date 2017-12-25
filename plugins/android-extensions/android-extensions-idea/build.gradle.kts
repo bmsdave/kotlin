@@ -16,6 +16,7 @@ dependencies {
     compile(project(":compiler:light-classes"))
     compile(project(":idea:idea-core"))
     compile(project(":idea"))
+    compile(project(":idea:idea-jvm"))
     compile(project(":idea:idea-gradle"))
     compile(project(":plugins:android-extensions-compiler"))
     compileOnly(project(":kotlin-android-extensions-runtime"))
@@ -34,9 +35,9 @@ dependencies {
     testCompile(projectDist(":kotlin-test:kotlin-test-jvm"))
     testCompile(commonDep("junit:junit"))
     testRuntime(projectDist(":kotlin-reflect"))
-    testCompile(intellijPluginDep("android")) { includeJars("android.jar", "android-common.jar", "sdk-common.jar", "sdk-tools.jar") }
-    testCompile(intellijPluginDep("Groovy")) { includeJars("Groovy.jar") }
-    testCompile(intellijDep()) { includeJars("extensions.jar") }
+    testCompile(intellijPluginDep("android")) { includeJars("android", "android-common", "sdk-common", "sdk-tools") }
+    testCompile(intellijPluginDep("Groovy")) { includeJars("Groovy") }
+    testCompile(intellijDep()) { includeJars("extensions") }
 
     testRuntime(project(":idea:idea-jvm"))
     testRuntime(project(":plugins:android-extensions-jps"))
@@ -72,6 +73,7 @@ projectTest {
     doFirst {
         systemProperty("android.sdk", androidSdk.singleFile.canonicalPath)
         systemProperty("android.jar", androidJar.singleFile.canonicalPath)
+        systemProperty("idea.home.path", intellijRootDir().canonicalPath)
     }
 }
 

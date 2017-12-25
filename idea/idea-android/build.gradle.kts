@@ -74,6 +74,7 @@ projectTest {
     workingDir = rootDir
     doFirst {
         systemProperty("android.sdk", androidSdk.singleFile.canonicalPath)
+        systemProperty("idea.home.path", intellijRootDir().canonicalPath)
     }
 }
 
