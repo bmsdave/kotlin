@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2014 JetBrains s.r.o.
+ * Copyright 2010-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-package kotlin
+package kotlin.io
 
-
-@kotlin.internal.InlineOnly
-public inline fun <R> synchronized(@Suppress("UNUSED_PARAMETER") lock: Any, block: () -> R): R = block()
+// temporary for shared code, until we have an annotation like JvmSerializable
+internal interface Serializable
